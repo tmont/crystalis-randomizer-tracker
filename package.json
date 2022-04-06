@@ -1,0 +1,15 @@
+{
+    "name": "crystalis-randomizer-tracker",
+    "version": "1.0.0",
+    "private": true,
+    "license": "MIT",
+    "scripts": {
+        "build": "./build.sh",
+        "watch": "npm run build -- --watch",
+        "start": "node_modules/.bin/serve -d public"
+    },
+    "devDependencies": {
+        "serve": "13.0.2",
+        "esbuild": "0.14.30"
+    }
+}
