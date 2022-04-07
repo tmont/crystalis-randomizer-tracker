@@ -1,0 +1,97 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Crystalis randomizer tracker static website"
+
+Parameters:
+  DomainName:
+    Description: Domain name of the website
+    Type: "String"
+  CertArn:
+    Description: Certificate ARN
+    Type: "String"
+  HostedZoneName:
+    Description: Domain of the hosted zone in Route 53
+    Type: "String"
+
+Resources:
+  CrystalisTrackerBucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: !Ref "DomainName"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+    DeletionPolicy: Retain
+
+  CrystalisTrackerCachePolicy:
+    Type: "AWS::CloudFront::CachePolicy"
+    Properties:
+      CachePolicyConfig:
+        Comment: "Cache policy for Crystalis randomizer tracker distribution"
+        DefaultTTL: 300 # five minutes
+        MaxTTL: 31536000
+        MinTTL: 60
+        Name: "crystalis-tracker-cache-policy"
+        ParametersInCacheKeyAndForwardedToOrigin:
+          CookiesConfig:
+            CookieBehavior: none
+          EnableAcceptEncodingBrotli: true
+          EnableAcceptEncodingGzip: true
+          HeadersConfig:
+            HeaderBehavior: none
+          QueryStringsConfig:
+            QueryStringBehavior: none
+
+  CrystalisTrackerDistribution:
+    Type: "AWS::CloudFront::Distribution"
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - !Ref "DomainName"
+        Comment: !Join [ "", [ "Frontend proxy for ", !Ref "DomainName" ] ]
+        DefaultCacheBehavior:
+          AllowedMethods:
+            - GET
+            - HEAD
+          CachedMethods:
+            - GET
+            - HEAD
+          CachePolicyId: !Ref CrystalisTrackerCachePolicy
+          Compress: true
+          TargetOriginId: s3-crystalis-tracker-bucket
+          ViewerProtocolPolicy: "redirect-to-https"
+        DefaultRootObject: "index.html"
+        Enabled: true
+        HttpVersion: http2
+        IPV6Enabled: true
+        Origins:
+          - DomainName: !GetAtt CrystalisTrackerBucket.RegionalDomainName
+            Id: s3-crystalis-tracker-bucket
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+        ViewerCertificate:
+          AcmCertificateArn: !Ref "CertArn"
+          MinimumProtocolVersion: "TLSv1"
+          SslSupportMethod: "sni-only"
+      Tags:
+        - Key: app
+          Value: crystalis
+
+  CrystalisTrackerDNS:
+    Type: "AWS::Route53::RecordSetGroup"
+    Properties:
+      Comment: !Join [ "", [ "DNS for ", !Ref "DomainName", " CloudFront proxy" ] ]
+      HostedZoneName: !Ref "HostedZoneName"
+      RecordSets:
+        - Name: !Ref "DomainName"
+          Type: "A"
+          AliasTarget:
+            # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-aliastarget.html#cfn-route53-aliastarget-hostedzoneid
+            HostedZoneId: "Z2FDTNDATAQYW2"
+            DNSName: !GetAtt CrystalisTrackerDistribution.DomainName
+        - Name: !Ref "DomainName"
+          Type: "AAAA"
+          AliasTarget:
+            HostedZoneId: "Z2FDTNDATAQYW2"
+            DNSName: !GetAtt CrystalisTrackerDistribution.DomainName
