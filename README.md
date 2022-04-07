@@ -1,11 +1,11 @@
 # Crystalis Randomizer Tracker
 
-This is an item tracker for the 
-[Crystalis randomizer](https://crystalisrandomizer.com)
-built with Node.js. It uses `localStorage` to persist the data.
-Internet-accessible instance is [here](https://crystalistracker.tmont.com/).
+This is a web-based item tracker for the
+[Crystalis randomizer](https://crystalisrandomizer.com). It uses 
+`localStorage` to persist the data. Internet-accessible instance is 
+[here](https://crystalistracker.tmont.com/).
 
-To run it locally:
+Running it locally requires Node.js. Install that and then run:
 
 1. `npm install`
 2. `npm run build`
