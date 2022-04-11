@@ -25,6 +25,10 @@ or something if that happens.
 
 ![usage gif](./docs/crystalis-tracker-usage.gif)
 
+Note that the [latest](https://crystalisrandomizer.com/latest) version of
+the randomizer is not compatible with this tracker, as it adds new item
+locations.
+
 ## Alternatives
 I didn't realize there was already one built into the randomizer website
 [here](https://crystalisrandomizer.com/track). Once you set all the flags
