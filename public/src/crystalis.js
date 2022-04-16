@@ -1,6 +1,11 @@
 ((window) => {
     const document = window.document;
 
+    const $ = selector => document.querySelector(selector);
+    const $all = selector => document.querySelectorAll(selector);
+    const $new = name => document.createElement(name);
+    const $text = text => document.createTextNode(text);
+
     const save = () => {
         const data = items.filter(item => item.locations.length > 0).map((item) => {
             return {
@@ -17,16 +22,27 @@
             return;
         }
 
+        let items;
         try {
-            const items = JSON.parse(data);
-            items.forEach((item) => {
-                item.locations.forEach((locationName) => {
-                    discoverItem(item.name, locationName);
-                });
-            });
+            items = JSON.parse(data);
         } catch (e) {
             console.error('failed to load data from localStorage', e);
+            return;
         }
+
+        items.forEach((item) => {
+            if (!item || !item.locations) {
+                return;
+            }
+
+            item.locations.forEach((locationName) => {
+                try {
+                    discoverItem(item.name, locationName);
+                } catch (e) {
+                    console.error(`failed to import item ${item.name} to location ${locationName}`);
+                }
+            });
+        });
     };
 
     const makeItem = (name, imageSrc, group, max) => {
@@ -171,13 +187,13 @@
         },
 
         {
-            groupName: 'Mt. Sabre South',
+            groupName: 'Mt. Sabre West',
             locations: [
-                { name: 'Mt. Sabre South item #1' },
-                { name: 'Mt. Sabre South item #2' },
-                { name: 'Mt. Sabre South item #3' },
-                { name: 'Mt. Sabre South item #4' },
-                { name: 'Mt. Sabre South Tornel', image: 'tornel' },
+                { name: 'Mt. Sabre West item #1' },
+                { name: 'Mt. Sabre West item #2' },
+                { name: 'Mt. Sabre West item #3' },
+                { name: 'Mt. Sabre West item #4' },
+                { name: 'Tornado bracelet trade-in', image: 'tornel' },
             ],
         },
 
@@ -407,7 +423,7 @@
     const discoverItem = (itemName, locationName) => {
         const item = items.find(item => item.name === itemName);
 
-        const locationEl = document.querySelector(`.location[data-name="${locationName}"]`);
+        const locationEl = $(`.location[data-name="${locationName}"]`);
         if (locationEl) {
             const index = item.locations.indexOf(locationName);
             if (index === -1) {
@@ -416,7 +432,7 @@
             locationEl.classList.add('discovered');
             locationEl.classList.remove('undiscovered');
             const discoveredItem = locationEl.querySelector('.discovered-item');
-            const img = document.createElement('img');
+            const img = $new('img');
             img.src = item.imageSrc;
             img.setAttribute('alt', item.name);
 
@@ -462,7 +478,7 @@
                 item.el.classList.remove('consumed');
             }
 
-            const locationEl = document.querySelector(`.location[data-name="${locationName}"]`);
+            const locationEl = $(`.location[data-name="${locationName}"]`);
             locationEl.classList.remove('discovered');
             locationEl.classList.add('undiscovered');
             const img = locationEl.querySelector('.discovered-item img');
@@ -476,29 +492,29 @@
         save();
     };
 
-    const itemListsContainer = document.querySelector('.item-lists-container');
+    const itemListsContainer = $('.item-lists-container');
     let dragGhost = null;
 
     const createItemList = (items) => {
-        const list = document.createElement('ul');
+        const list = $new('ul');
         list.className = `item-list`;
 
         items.forEach((item) => {
-            const li = document.createElement('li');
+            const li = $new('li');
 
-            const img = document.createElement('img');
+            const img = $new('img');
             img.src = item.imageSrc;
             img.setAttribute('alt', item.name);
 
-            const figcaption = document.createElement('figcaption');
+            const figcaption = $new('figcaption');
             figcaption.className = 'crystalis-message';
-            figcaption.appendChild(document.createTextNode(item.name));
+            figcaption.appendChild($text(item.name));
 
-            const counter = document.createElement('div');
+            const counter = $new('div');
             counter.className = 'item-counter';
-            counter.appendChild(document.createTextNode(item.max));
+            counter.appendChild($text(item.max));
 
-            const figure = document.createElement('figure');
+            const figure = $new('figure');
             item.el = figure;
             figure.classList.add('item');
             figure.appendChild(img);
@@ -526,6 +542,10 @@
                     el: figure.cloneNode(true),
                     item,
                 };
+                const ghostCounter = dragGhost.el.querySelector('.item-counter');
+                if (ghostCounter) {
+                    ghostCounter.parentNode.removeChild(ghostCounter);
+                }
                 dragGhost.el.classList.add('drag-ghost');
                 dragGhost.el.style.left = (e.clientX + document.documentElement.scrollLeft) + 'px';
                 dragGhost.el.style.top = (e.clientY + document.documentElement.scrollTop) + 'px';
@@ -539,7 +559,7 @@
     };
 
     const createDivider = () => {
-        itemListsContainer.appendChild(document.createElement('hr'));
+        itemListsContainer.appendChild($new('hr'));
     }
 
     createItemList(items.filter(item => item.group === 'armor'));
@@ -561,29 +581,29 @@
     createDivider();
     createItemList(items.filter(item => item.group === 'other'));
 
-    const locationContainer = document.querySelector('.locations-container');
+    const locationContainer = $('.locations-container');
     itemLocations.forEach((group) => {
         const name = group.groupName;
         const locations = group.locations;
 
-        const container = document.createElement('div');
+        const container = $new('div');
         container.className = 'location-area';
 
-        const header = document.createElement('header');
+        const header = $new('header');
         header.appendChild(document.createTextNode(name));
         container.appendChild(header);
 
-        const list = document.createElement('ul');
+        const list = $new('ul');
         locations.forEach((data) => {
             if (typeof(data) !== 'object') {
                 return;
             }
-            const li = document.createElement('li');
+            const li = $new('li');
             li.className = 'location undiscovered';
-            const imgContainer = document.createElement('div');
+            const imgContainer = $new('div');
             imgContainer.className = 'location-img-container';
             li.appendChild(imgContainer);
-            const img = document.createElement('img');
+            const img = $new('img');
             img.className = 'location-icon';
             img.src = data.image ?
                 `images/locations/${data.image}-square.png` :
@@ -592,7 +612,7 @@
 
             imgContainer.appendChild(img);
 
-            const usedItem = document.createElement('div');
+            const usedItem = $new('div');
             usedItem.className = 'discovered-item';
             li.appendChild(usedItem);
 
@@ -618,9 +638,9 @@
         dragGhost = null;
         document.body.classList.remove('dragging');
 
-        const dropTarget = document.querySelector('.drop-target');
+        const dropTarget = $('.drop-target');
 
-        document.querySelectorAll('.location').forEach((location) => {
+        $all('.location').forEach((location) => {
             location.classList.remove('drop-target');
         });
 
@@ -637,7 +657,7 @@
             return;
         }
 
-        document.querySelectorAll('.location').forEach((location) => {
+        $all('.location').forEach((location) => {
             location.classList.remove('drop-target');
         });
 
@@ -656,7 +676,7 @@
         location.classList.add('drop-target');
     });
 
-    document.querySelector('.clear-all-btn').addEventListener('click', () => {
+    $('.clear-all-btn').addEventListener('click', () => {
         items.forEach((item) => undiscoverItem(item.name));
     });
 

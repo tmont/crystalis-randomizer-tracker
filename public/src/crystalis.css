@@ -197,7 +197,7 @@ legend {
 }
 
 .location-img-container {
-    min-width: 44px;
+    min-width: var(--icon-width);
 }
 
 .location {
