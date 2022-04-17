@@ -6,7 +6,7 @@ mkdir -p "${dir}"
 
 args=()
 if [[ $1 = "--watch" ]]; then
-    args+=("--watch")
+    args+=("--watch" --sourcemap=inline)
 fi
 
 node_modules/.bin/esbuild \
