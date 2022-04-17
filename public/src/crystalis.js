@@ -290,6 +290,7 @@
         {
             groupName: 'Kirisa Plant Cave',
             requirement: null,
+            reqType: 'sword',
             locations: [
                 { name: 'Kirisa plant Cave Item #1' },
                 { name: 'Kirisa plant shrubbery', image: 'kirisa-plant-shrubbery' },
@@ -568,7 +569,7 @@
             e.stopPropagation();
 
             // show popup for choosing an item
-            let itemNames;
+            let itemNames = [];
             if (type === 'sword') {
                 itemNames = [
                     'Sword of Wind',
