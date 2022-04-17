@@ -29,6 +29,13 @@ Note that the [latest](https://crystalisrandomizer.com/latest) version of
 the randomizer is not compatible with this tracker, as it adds new item
 locations.
 
+You can also track trade-in items and breakable wall requirements if the
+relevant flags are set. Click on the "?" to set the required item or sword.
+Can be handy particularly for remembering which sword is needed to break walls 
+in an area.
+
+![requirement gif](./docs/crystalis-tracker-req.gif)
+
 ## Alternatives
 I didn't realize there was already one built into the randomizer website
 [here](https://crystalisrandomizer.com/track). Once you set all the flags

@@ -4,8 +4,6 @@
     --gutter-quarter: calc(var(--gutter) / 4);
     --font-color: ivory;
     --bg-color: darkslategray;
-    --fieldset-border-color: slategray;
-    --legend-bg-color: #263f3f;
     --crystalis-blue: #0070EC;
     --icon-width: 32px;
 }
@@ -35,21 +33,9 @@ ul {
     margin: 0;
 }
 
-fieldset {
-    border-color: var(--fieldset-border-color);
-    text-shadow: 1px 1px 1px black;
-}
 figure > img,.discovered-item > img {
     width: var(--icon-width);
     height: var(--icon-width);
-}
-
-legend {
-    border: 1px solid var(--fieldset-border-color);
-    padding: var(--gutter-quarter) var(--gutter-half);
-    border-radius: 4px;
-    background-color: var(--legend-bg-color);
-    font-size: 90%;
 }
 
 .item-counter {
@@ -74,6 +60,10 @@ legend {
     padding: 4px;
     position: relative;
     z-index: 1;
+}
+
+.dragging .item {
+    cursor: grabbing;
 }
 
 .item:hover figcaption {
@@ -161,6 +151,10 @@ legend {
     text-decoration: underline;
     font-size: 80%;
     font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--gutter-half);
 }
 .locations-container li {
     display: flex;
@@ -174,7 +168,7 @@ legend {
     border-radius: 2px;
 }
 
-.locations-container .undiscovered {
+.locations-container .undiscovered .location-icon {
     opacity: 0.65;
     filter: grayscale(0.5);
 }
@@ -198,6 +192,30 @@ legend {
 
 .location-img-container {
     min-width: var(--icon-width);
+    position: relative;
+}
+
+.location-requirement {
+    width: calc(var(--icon-width) * 0.65);
+    height: calc(var(--icon-width) * 0.65);
+    opacity: 0.75;
+    cursor: pointer;
+    transition: all 100ms linear;
+}
+.location-requirement:hover {
+    opacity: 1;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+}
+
+.location-requirement img {
+    width: 100%;
+    height: 100%;
+}
+
+.location-img-container .location-requirement {
+    position: absolute;
+    left: -5px;
+    bottom: -5px;
 }
 
 .location {
@@ -212,7 +230,7 @@ legend {
     filter: none !important;
 }
 .drop-target .location-icon {
-    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5)) !important;
 }
 
 .crystalis-message {
@@ -246,4 +264,30 @@ hr {
 .nav-menu {
     display: flex;
     justify-content: space-between;
+}
+
+.item-dialog {
+    padding: var(--gutter-half);
+    position: absolute;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+    z-index: 10;
+    display: flex;
+    flex-direction: row;
+    gap: var(--gutter-quarter);
+}
+
+.item-dialog > div {
+    cursor: pointer;
+    width: var(--icon-width);
+    height: var(--icon-width);
+}
+.item-dialog > div img {
+    width: var(--icon-width);
+    height: var(--icon-width);
+    opacity: 0.75;
+    transition: all 100ms linear;
+}
+.item-dialog > div:hover img {
+    opacity: 1;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
 }
