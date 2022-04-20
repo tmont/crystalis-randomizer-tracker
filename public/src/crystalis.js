@@ -175,6 +175,14 @@
                 { name: 'Leaf elder', image: 'leaf-elder' },
             ],
         },
+
+        {
+            groupName: 'Zebu\'s Cave',
+            requirement: null,
+            reqType: 'sword',
+            locations: [],
+        },
+
         {
             groupName: 'Windmill',
             locations: [
@@ -243,6 +251,14 @@
                 { name: 'Mt. Sabre North item #2' },
                 { name: 'Mt. Sabre North item #3' },
                 { name: 'Kelbesque drop', image: 'kelbesque' },
+            ],
+        },
+
+        {
+            groupName: 'Portoa Sealed Cave',
+            requirement: null,
+            reqType: 'sword',
+            locations: [
                 { name: 'Open prison door', image: 'leaf-elder' },
             ],
         },

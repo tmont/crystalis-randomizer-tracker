@@ -149,7 +149,7 @@ figure > img,.discovered-item > img {
 }
 .locations-container header {
     text-decoration: underline;
-    font-size: 80%;
+    font-size: 65%;
     font-weight: bold;
     display: flex;
     justify-content: space-between;
